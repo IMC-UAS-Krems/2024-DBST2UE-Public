@@ -4,9 +4,9 @@
 
 #### Task 1 - Install SQLite3 and Docker
 
-- Install SQLite3
-- Check that you can run it by running `sqlite3 --version` `sqlite3.exe --version` (?) on your shell
-- Install `docker` (you need to register)
+- [ ] Install SQLite3
+- [ ] Check that you can run it by running `sqlite3 --version` `sqlite3.exe --version` (?) on your shell
+- [ ] Install `docker` (you need to register)
 - Start docker desktop if not yet started (this is a regular app)
 - Check that docker is working by running `docker ps` or `docker.exe ps` (?) on your shell
 - Start the hello-world container using `docker run hello-world`. What's the message you see on your console?
