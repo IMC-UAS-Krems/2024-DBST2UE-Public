@@ -20,7 +20,7 @@ The music database could be used to manage your music collection, for instance, 
 
 Because this database is for a personal collection, it does not have to be complex. It must store only the relationships between artists, albums, and tracks, thus ignoring other details (e.g., music genres, music label).
 
-Nevertheless, the following the music database must fulfill the following requirements:
+Nevertheless, the music database must fulfill the following requirements:
 
 The music collection consists of albums that are made by exactly one artist. An artist can make one or more albums that contains one or more tracks. Artists, albums, and tracks each have a name. Artists can have a nickname (forget PDiddy) and groups count as a single artist. Albums have a publication year. Each track is on exactly one album and has a time length (measured in seconds).
 
