@@ -10,7 +10,7 @@ Consider an incomplete database schema containing the following Relations:
 ```
 Person (name, age, gender)
 frequents (Person.name, pizzeria)
-fats (Person.name, pizza) 
+eats (Person.name, pizza) 
 serves (pizzeria, pizza, price, allergens)
 ```
 
