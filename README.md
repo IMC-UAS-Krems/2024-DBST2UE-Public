@@ -1,41 +1,9 @@
 # Public repository for DBST2UE 2024
 
-## Session 5 - 10/04/2024
+## Session 8 - 24/04/2024
 
-### Task 1: From RM to ER and Back
+### Task 1: More on Relational Algebra
 
-#### Step 1: Lift up RM
-Consider an incomplete database schema containing the following Relations:
-
-```
-Person (name, age, gender)
-frequents (Person.name, pizzeria)
-eats (Person.name, pizza) 
-serves (pizzeria, pizza, price, allergens)
-```
-
-> NOTE: Limit gender to male/female/other
-
-Reverse engineer a possible ER Model that could be used to generate such an incomplete Relation Model.
-
-#### Step 2: Complete the ER Model
-Complete the ER Model by adding the missing details, such as attributes, relationships, cardinality/participation constrains. Identify possible keys/superkeys, and missing strong and weak entities.
-
-#### Step 3: Remap the (completed) ER model into RM
-Make sure to select primary keys and create appropriate references (i.e., connections via primary and foreign keys) between the various Relations.
-
-### Task 2: Implement the database in SQLite3
-
-- Read online about which queries and SQL operators to use for creating tables and defining constraints and references.
-_Hint_: SQL is used as Data Definition Language (DDL)
-
-> Note: Refrain from using ChatGPT or similar tools; instead, face the challenge of understanding something on your own!
-
-- Write pytest fixtures to insert data in a temporary databases. Start by having a method that creates the DB, then write additional methods to insert data.
-
-- Discuss how one can generate test data (e.g., names of persons, pizzas, allergens, etc.). Are there datasets that can be used? Is the use of Generative AI (e.g., ChatGPT) meaningful here?
-
-### Task 3: Relational Algebra
 Making use of the following Operators:
 
 - RENAMING(R)
@@ -46,11 +14,21 @@ Making use of the following Operators:
 - SELECTION (S)
 - CARTESIAN PRODUCT (x)
 
-Write the relational algebra expressions corresponding to the following queries in Natural Language and *simulate* their execution on a small dataset (from Task 2)
+Write the relational algebra expressions corresponding to the following queries in Natural Language and *simulate* their execution on a small dataset.
 
-1. Find all pizzerias frequented by at least one person under the age of `18`.
+As a remark, the Relational Model is the following one:
 
-2. Find the names of all `female`s who can eat either `mushroom` or `pepperoni` pizzas (but NOT both)
+```
+Person (name, age, gender)
+frequents (Person.name, pizzeria)
+eats (Person.name, pizza) 
+serves (pizzeria, pizza, price, allergens)
+```
+
+
+1. Find all pizzerias frequented by at least one person under the age of `18`. - Done
+
+2. Find the names of all `female`s who can eat either `mushroom` or `pepperoni` pizzas (but NOT both). - Done
 
 3. Find the names of all `female`s who eat both `mushroom` and `pepperoni` pizzas.
 
@@ -65,6 +43,20 @@ Write the relational algebra expressions corresponding to the following queries 
 8. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
 
 9. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+### Task 2: SQL as Data Definition Language (DDL)
+
+Using SQLIte, implement the `pizza_connection.sql` database from the above Relational Model.
+
+Make sure to define tables with appropriate attributes, domains, constraints, and so on.
+
+### Task 3: SQL as Data Manipulation Language (DML)
+
+Fill up the database with some data. Find a way to automatically generate data but ensure that the referential  integrity, type, and domain  constrains are met!
+
+### Task 4: SQL as Query Language (QL)
+
+Implement the queries from Task 1 into SQL and run them on the `pizza_connection.sql`. If you realize the queries are wrong (i.e., you have a counter example), fix them in SQL and in Relational Algebra.
 
 ## Log of Past Sessions
 
@@ -120,3 +112,22 @@ We introduced to concept of test fixture, experimented with hardcoded and tempor
 We completed the missing tasks the previous session.03 and exercised a bit on mapping a database descriptions in natural languages into ER-Models. We identify entities and relationships, discussed where to put attributes, and how to set cardinalities/participations. In one case, we also relied on Generalization (is-a) from EER.
 
 The database model we designed implemented the backend of a simple music collection system and the description was inspired by content available at [O'Reilly Learning My SQL](https://www.oreilly.com/library/view/learning-mysql/0596008643/ch04s04.html) and [Geeks For Geeks](https://www.geeksforgeeks.org/how-to-design-a-database-for-music-streaming-app/)
+
+### Session 5 - 10/04/2024
+
+We reverse engineered an ER model from the pizza RM. We discussed alternative design choices at the ER-level and checked whether these could be mapped correctly back to RM-level. 
+
+We also argued about possible simplifications considering entities with only the key attribute, weak entities, and entities connected  by 1:N relationships.
+
+We skipped Task 2 on generating data and implementing the RM into SQLite.
+
+We wrote two queries in Relational Algebra, a simple one, and the second that made use of set operators. We solved the queries by splitting complex queries into simpler ones.
+
+### Session 6 - 18/04/2024
+
+Self-Learning - Part 1
+
+### Session 7 - 23/04/2024
+
+Self-Learning - Part 2
+
