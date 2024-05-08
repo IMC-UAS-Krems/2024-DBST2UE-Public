@@ -1,62 +1,103 @@
 # Public repository for DBST2UE 2024
 
-## Session 8 - 24/04/2024
+## Session 9 - 08/05/2024
 
-### Task 1: More on Relational Algebra
+### Task 1.1: More Queries
 
-Making use of the following Operators:
-
-- RENAMING(R)
-- UNION (U)
-- INTERSECTION (i)
-- SET DIFFERENCE (/)
-- PROJECTION (P)
-- SELECTION (S)
-- CARTESIAN PRODUCT (x)
-
-Write the relational algebra expressions corresponding to the following queries in Natural Language and *simulate* their execution on a small dataset.
-
-As a remark, the Relational Model is the following one:
+Given the following SQL Schema:
 
 ```
-Person (name, age, gender)
-frequents (Person.name, pizzeria)
-eats (Person.name, pizza) 
-serves (pizzeria, pizza, price, allergens)
+CREATE TABLE Person (
+	name VARCHAR(255),
+	age UNSIGNED INT NOT NULL CHECK (age > 0 AND age < 130),
+	gender CHAR CHECK (gender IN ("M", "F", "O", "m", "f", "o")),
+	PRIMARY KEY(name)
+);
+
+CREATE TABLE Frequents (
+	name VARCHAR(255) NOT NULL,
+	pizzeria VARCHAR(255) NOT NULL,
+	PRIMARY KEY(name, pizzeria),
+	FOREIGN KEY (name) REFERENCES Person(name)	
+);
+
+CREATE TABLE Eats(
+	name VARCHAR(255) NOT NULL,
+	pizza VARCHAR(255) NOT NULL,
+	PRIMARY KEY(name, pizza),
+	FOREIGN KEY (name) REFERENCES Person(name)
+);
+
+CREATE TABLE Serves(
+	pizzeria VARCHAR(255) NOT NULL,
+	pizza VARCHAR(255) NOT NULL,
+	price NUMERIC(10,2) NOT NULL CHECK (price > 0),
+	PRIMARY KEY(pizzeria, pizza)
+);
 ```
 
+Write the following queries, possibly using set operators, nested queries, views and the like. Whenever possible, argue whether you could have rewritten the queries in a different way (e.g., without nesting, without set operators).
 
-1. Find all pizzerias frequented by at least one person under the age of `18`. - Done
+For each query, define a set of tests (inputs) that check it correctness. Typical examples include running the query against:
 
-2. Find the names of all `female`s who can eat either `mushroom` or `pepperoni` pizzas (but NOT both). - Done
+- an empty db
+- a db containing NULL values (when the constraints allow for them)
+- a db with (partially) matching tuples (e.g., for testing joins).
 
-3. Find the names of all `female`s who eat both `mushroom` and `pepperoni` pizzas.
 
-4. Find all pizzerias that serve at least one pizza that `Amy` eats for less than `$10.00`.
+Possible queries:
 
-5. Find all pizzerias that are frequented by only `female`s or only `male`s.
+1. Find all pizzerias that are frequented by only `female`s or only `male`s.
 
-6. For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. Return all such person name and pizza pairs.
+2. For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. Return all such person name and pizza pairs.
 
-7. Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+3. Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
 
-8. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+4. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
 
-9. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+5. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
 
-### Task 2: SQL as Data Definition Language (DDL)
+### Task 1.2: Views
 
-Using SQLIte, implement the `pizza_connection.sql` database from the above Relational Model.
+Given the following SQL Schema:
 
-Make sure to define tables with appropriate attributes, domains, constraints, and so on.
+```
+CREATE TABLE Department(id INTEGER PRIMARY KEY, name TEXT);
 
-### Task 3: SQL as Data Manipulation Language (DML)
+CREATE TABLE Employee(id INTEGER PRIMARY KEY, name TEXT, role TEXT, dep_id INTEGER, FOREIGN KEY (dep_id) REFERENCES Department(id)) ;
+```
 
-Fill up the database with some data. Find a way to automatically generate data but ensure that the referential  integrity, type, and domain  constrains are met!
+Filled with the data:
 
-### Task 4: SQL as Query Language (QL)
+```
+INSERT INTO Department(id, name) VALUES(1, 'Accounting');
+INSERT INTO Department(id, name) VALUES(2, 'IT');
 
-Implement the queries from Task 1 into SQL and run them on the `pizza_connection.sql`. If you realize the queries are wrong (i.e., you have a counter example), fix them in SQL and in Relational Algebra.
+
+INSERT INTO Employee(name, role, dep_id) VALUES('John Doe', 'Manager', 2);
+INSERT INTO Employee(name, role, dep_id) VALUES('Jane Smith', 'Developer', 2);
+INSERT INTO Employee(name, role, dep_id) VALUES('David Gray', 'Developer', 2);
+INSERT INTO Employee(name, role, dep_id) VALUES('Mia Brown', 'Sales', 1);
+INSERT INTO Employee(name, role, dep_id) VALUES('Max Green', 'Developer', 2);
+```
+
+1. Create a View on top of `Employee`, accessing only the attributes `id` and `name` of "Developers"
+
+2. Try to insert and update values in that view. How does the table change?
+
+3. Create another View that shows the name of "overcrowded" departments, i.e., departments that have more than 3 Employees.
+
+### Task 1.3 Dealing with References
+Update the Employee table and add an update and delete clause  on the foreign key. Make sure they are different.
+
+1. Which update/delete clause did you choose?
+2. Discuss how the update delete clauses affect the Employee table after updating and deleting the related entries in Department.
+3. Execute the update and check that the table was modified as expected. Next, execute the delete and check that table was modified as expected
+
+### Task 2: SQL Alchemy
+Implement the database in Python using SQL Alchemy, fill it with input data, and run some the queries from Task 1.
+
+Implement the queries as test cases (one test, one query) and run the tests against a local SQLIte and a "dockerized" MariaDB using the test fixtures that you implemented during the Self-Learning activities 
 
 ## Log of Past Sessions
 
@@ -131,3 +172,6 @@ Self-Learning - Part 1
 
 Self-Learning - Part 2
 
+### Session 8 - 24/04/2024
+
+We exercise some more with RA on the pizza database and we started working with SQL to create tables and define constraints (SQL as DDL). Additionally, we also started to insert data/values in the database (SQL as DML).
