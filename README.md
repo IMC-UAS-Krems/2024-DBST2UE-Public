@@ -47,15 +47,11 @@ For each query, define a set of tests (inputs) that check it correctness. Typica
 
 Possible queries:
 
-1. Find all pizzerias that are frequented by only `female`s or only `male`s.
+1. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+2. Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
+3. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
 
-2. For each person, find all pizzas the person eats that are not served by any pizzeria the person frequents. Return all such person name and pizza pairs.
 
-3. Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
-
-4. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
-
-5. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
 
 ### Task 1.2: Views
 
