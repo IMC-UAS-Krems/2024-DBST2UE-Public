@@ -10,7 +10,7 @@ Given the following SQL Schema:
 CREATE TABLE Person (
 	name VARCHAR(255),
 	age UNSIGNED INT NOT NULL CHECK (age > 0 AND age < 130),
-	gender CHAR CHECK (gender IN ("M", "F", "O", "m", "f", "o")),
+	gender CHAR CHECK (gender IN ('M', 'F', 'O', 'm', 'f', 'o')),
 	PRIMARY KEY(name)
 );
 
@@ -77,11 +77,11 @@ INSERT INTO Employee(name, role, dep_id) VALUES('Mia Brown', 'Sales', 1);
 INSERT INTO Employee(name, role, dep_id) VALUES('Max Green', 'Developer', 2);
 ```
 
-1. Create a View on top of `Employee`, accessing only the attributes `id` and `name` of "Developers"
+1. Create a View on top of `Employee`, accessing only the attributes `id` and `name` of 'Developers'
 
 2. Try to insert and update values in that view. How does the table change?
 
-3. Create another View that shows the name of "overcrowded" departments, i.e., departments that have more than 3 Employees.
+3. Create another View that shows the name of 'overcrowded' departments, i.e., departments that have more than 3 Employees.
 
 ### Task 1.3 Dealing with References
 Update the Employee table and add an update and delete clause  on the foreign key. Make sure they are different.
@@ -93,7 +93,7 @@ Update the Employee table and add an update and delete clause  on the foreign ke
 ### Task 2: SQL Alchemy
 Implement the database in Python using SQL Alchemy, fill it with input data, and run some the queries from Task 1.
 
-Implement the queries as test cases (one test, one query) and run the tests against a local SQLIte and a "dockerized" MariaDB using the test fixtures that you implemented during the Self-Learning activities 
+Implement the queries as test cases (one test, one query) and run the tests against a local SQLIte and a 'dockerized' MariaDB using the test fixtures that you implemented during the Self-Learning activities 
 
 ## Log of Past Sessions
 
