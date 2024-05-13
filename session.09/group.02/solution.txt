@@ -1,0 +1,88 @@
+Task 1.3
+-- Update Employee table and defined ON CASCADE/ACTION/DO NOTHING/SET DEFAULT when Department is updated/deleted
+
+
+
+
+Task 1.2
+-- Create a View on top of Employee, accessing only the attributes id and name of 'Developers'. 
+
+CREATE VIEW Developer AS
+	SELECT id, name
+	FROM Employee
+	WHERE role = 'Developer';
+
+-- Next, try to insert and update values in that view. 
+
+I got an Error!
+
+-- Create another View that shows the name of 'overcrowded' departments, i.e., departments that have more than 3 Employees.
+
+
+CREATE VIEW OvercrowdedDepName AS
+	SELECT name
+	FROM OvercrowdedDep;
+
+CREATE VIEW OvercrowdedDep AS
+	SELECT Department.name, COUNT(*)
+	FROM Department, Employee
+	WHERE Department.id = Employee.dep_id
+	GROUP BY Employee.dep_id
+	HAVING COUNT(*) > 3;
+	
+Task 1.1
+
+-- Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+SELECT pizzeria
+FROM Serves
+WHERE pizza = "pepperoni" AND price = (
+   SELECT MIN(price)
+	FROM Serves
+	WHERE pizza = "pepperoni"
+);
+
+
+TC0:
+	INSERT INTO Serves VALUES 
+	("Da Gino", "margherita", 10),
+	("Mammamia", "margherita", 9);
+
+Expected value:	
+	<empty>
+
+TC1:
+	INSERT INTO Serves VALUES 
+	("Da Gino", "margherita", 10),
+	("Da Gino", "pepperoni", 10),
+	("Nunzio", "pepperoni", 10),
+	("Mammamia", "margherita", 9);
+
+Expected value:	
+	Da Gino
+	Nunzio
+
+TC2:
+	INSERT INTO Serves VALUES 
+	("Da Gino", "margherita", 10),
+	("Da Gino", "pepperoni", 10),
+	("Nunzio", "pepperoni", 10),
+	("Mammamia", "Peperoni", 10),
+	("Mammamia", "margherita", 9);
+
+Expected value:	
+	Da Gino
+	Nunzio
+
+TC1:
+	INSERT INTO Serves VALUES 
+	("Da Gino", "margherita", 10),
+	("Da Gino", "pepperoni", 10),
+	("Nunzio", "pepperoni", 12),
+	("Mammamia", "pepperoni", 15),
+	("Mammamia", "margherita", 9);
+
+Expected value:
+	Da Gino
+
+

@@ -1,0 +1,12 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE Department(id INTEGER PRIMARY KEY, name TEXT);
+INSERT INTO Department VALUES(1,'Accounting');
+INSERT INTO Department VALUES(2,'IT');
+CREATE TABLE Employee(id INTEGER PRIMARY KEY, name TEXT, role TEXT, dep_id INTEGER, FOREIGN KEY (dep_id) REFERENCES Department(id));
+INSERT INTO Employee VALUES(1,'John Doe','Manager',2);
+INSERT INTO Employee VALUES(2,'Jane Smith','Developer',2);
+INSERT INTO Employee VALUES(3,'David Gray','Developer',2);
+INSERT INTO Employee VALUES(4,'Mia Brown','Sales',1);
+INSERT INTO Employee VALUES(5,'Max Green','Developer',2);
+COMMIT;

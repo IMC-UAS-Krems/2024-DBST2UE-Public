@@ -1,0 +1,236 @@
+============================================================
+TASK 1.1
+============================================================
+
+-- Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
+
+Query:
+SELECT pizzeria
+FROM Serves
+WHERE pizza = 'pepperoni' AND
+price = (
+  SELECT MIN(price)
+  FROM Serves
+  WHERE pizza = 'pepperoni'
+);
+
+
+Test Cases:
+
+TC1:
+Assumption: Empty DB
+Setup: 
+DELETE FROM Serves;
+INSERT INTO Serves VALUES
+('Gino', 'pepperoni', 10),
+('Mammamia', 'pepperoni', 12),
+('Mammamia', 'margherita', 8),
+('Riva', 'pepperoni', 10);
+
+	Expected output
+Gino
+Riva
+
+TC2
+Assumption: Empty DB
+Setup: 
+DELETE FROM Serves;
+INSERT INTO Serves VALUES
+('Gino', 'margherita', 10),
+('Mammamia', 'margherita', 8);
+
+Expected output
+<Empty>
+
+------------------------------------------------------------------------
+
+-- Find the names of all people who
+	- frequent ONLY pizzerias serving at least one pizza they eat.
+	The intersection of Frequents and Pizzerias must be the same as Frequents
+
+- The pizzerias that they frequent is = pi
+at least one pizza -> (INNER) Join
+
+CREATE VIEW Task1_2 AS
+
+SELECT f.name
+FROM Frequents f
+GROUP BY f.name
+HAVING COUNT(DISTINCT f.pizzeria) = (
+SELECT COUNT(DISTINCT a.pizzeria)
+FROM 
+(SELECT s.pizzeria
+FROM Eats e, Serves s
+WHERE e.pizza = s.pizza AND e.name = f.name
+INTERSECT
+SELECT f0.pizzeria
+FROM Frequents f0
+WHERE f0.name = f.name
+) a
+);
+
+--- Pizzerias that serve anything Bob likes
+
+
+Test Cases:
+
+TC1
+Assumption: Empty DB
+Setup:
+DELETE FROM Frequents;
+DELETE FROM Serves;
+DELETE FROM Eats;
+DELETE FROM Person; -- Why this as last?
+
+INSERT INTO Person VALUES
+('Annie', 20, 'F'),
+('Bob', 20, 'M');
+
+INSERT INTO Frequents VALUES
+('Annie', 'Mammamia'),
+('Annie', 'Gino'),
+('Bob', 'Riva');
+
+INSERT INTO Serves VALUES
+('Mammamia', 'pepperoni', 10),
+('Gino', 'pepperoni', 12),
+('Riva', 'margherita', 8);
+
+INSERT INTO Eats VALUES
+('Annie', 'pepperoni'),
+('Bob', 'pepperoni');
+
+Expected Result:
+	Annie: she eats pepperoni and frequent both (all) the pizzerias serving that
+
+	No Bob: he frequents riva that does not serve any of the pizzas he eats
+
+
+TC2: As TC1 but now Annie frequents also Riva that does not serve pepperoni
+
+Assumption: Empty DB
+Setup:
+DELETE FROM Frequents;
+DELETE FROM Serves;
+DELETE FROM Eats;
+DELETE FROM Person; -- Why this as last?
+
+INSERT INTO Person VALUES
+('Annie', 20, 'F'),
+('Bob', 20, 'M');
+
+INSERT INTO Frequents VALUES
+('Annie', 'Mammamia'),
+('Annie', 'Gino'),
+('Annie', 'Riva'),
+('Bob', 'Riva');
+
+INSERT INTO Serves VALUES
+('Mammamia', 'pepperoni', 10),
+('Gino', 'pepperoni', 12),
+('Riva', 'margherita', 8);
+
+INSERT INTO Eats VALUES
+('Annie', 'pepperoni'),
+('Bob', 'pepperoni');
+
+Expected result:
+	No Bob: as before
+	No Annie: she does not ONLY frequents pizzerias that serve at least something she eats
+
+TC3 as TC2 but now Bob eats also margherita and frequents also Gino
+
+Assumption: Empty DB
+Setup:
+DELETE FROM Frequents;
+DELETE FROM Serves;
+DELETE FROM Eats;
+DELETE FROM Person; -- Why this as last?
+
+INSERT INTO Person VALUES
+('Annie', 20, 'F'),
+('Bob', 20, 'M');
+
+INSERT INTO Frequents VALUES
+('Annie', 'Mammamia'),
+('Annie', 'Gino'),
+('Annie', 'Riva'),
+('Bob', 'Riva'),
+('Bob', 'Gino');
+
+INSERT INTO Serves VALUES
+('Mammamia', 'pepperoni', 10),
+('Gino', 'pepperoni', 12),
+('Riva', 'margherita', 8);
+
+INSERT INTO Eats VALUES
+('Annie', 'pepperoni'),
+('Bob', 'pepperoni'),
+('Bob', 'margherita');
+
+Expected result:
+	Bob: Now Bob frequents only the pizzerias that serves something he eats
+	No Annie: as before
+
+============================================================
+TASK 1.2 - Views
+============================================================
+
+-- Create a View on top of Employee, accessing only the attributes id and name of 'Developers'
+
+CREATE VIEW Developers AS
+	SELECT id, name
+	FROM Employee
+	WHERE role = 'Developer';
+
+? How to check this is correct ?
+
+SELECT * FROM Developers;
+
+-- Try to insert and update values in that view. How does the table change?
+
+INSERT INTO Developers VALUES (10, 'Foo Bar');
+
+Executing the insert (or the update) triggers an error. This is expected since the View cannot be modified
+
+Updating the underlying table (by adding a Developer) causes the View to produce a different result (4 rows instead of 3)
+
+INSERT INTO Employee VALUES (10, 'Foo Bar', 'Developer', 1);
+
+
+-- Create another View that shows the name of 'overcrowded' departments, i.e., departments that have more than 3 Employees.
+
+--- SOLUTION 1: Use an Anonymous (Inline) View 
+
+SELECT dep_id, COUNT(*)
+  FROM Employee
+  GROUP BY dep_id
+  HAVING COUNT(*) > 3
+
+CREATE VIEW MessyDep AS
+SELECT d.name
+FROM Department d JOIN (
+  SELECT dep_id, COUNT(*)
+  FROM Employee
+  GROUP BY dep_id
+  HAVING COUNT(*) > 3
+) c ON d.id = c.dep_id;
+
+--- ALTERNATIVE SOLUTION: Create 2 views
+
+CREATE VIEW MessyDep AS
+SELECT d.name
+FROM Department d JOIN Dep_ID_COUNT c 
+	ON d.id = c.dep_id;
+
+CREATE VIEW Dep_ID_COUNT AS:
+SELECT dep_id, COUNT(*)
+FROM Employee
+GROUP BY dep_id
+HAVING COUNT(*) > 3;
+
+	
+
+? How to check this is correct ?
+
+
