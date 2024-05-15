@@ -1,99 +1,241 @@
 # Public repository for DBST2UE 2024
 
-## Session 9 - 08/05/2024
+## Session 10 - 15/05/24
 
-### Task 1.1: More Queries
+### Task 1 Normalization
 
-Given the following SQL Schema:
+Given the following table:
 
-```
-CREATE TABLE Person (
-	name VARCHAR(255),
-	age UNSIGNED INT NOT NULL CHECK (age > 0 AND age < 130),
-	gender CHAR CHECK (gender IN ('M', 'F', 'O', 'm', 'f', 'o')),
-	PRIMARY KEY(name)
-);
+|StudID |CourseID |StudName |CourseName |Grade| FacName |FacPhone|
+|-----|-----|-----|-----|-----|-----|-----|
+1 | PROG2, DBSE2UE | Adams | Prog2, Database | 1, 2 | Dhungana, Gambi | 1234, 1122
+2 | PROG2 | Jones | Prog2 | 3  | Dhungana | 1234
+3 | PROG2 | Smith | Prog2 | 1  | Dhungana | 1234
+4 | PROG2, DBSE2UE| Baker | Prog2, Database | 3, 1 | Dhungana, Gambi| 1234, 1122
 
-CREATE TABLE Frequents (
-	name VARCHAR(255) NOT NULL,
-	pizzeria VARCHAR(255) NOT NULL,
-	PRIMARY KEY(name, pizzeria),
-	FOREIGN KEY (name) REFERENCES Person(name)	
-);
+#### Task 1.1
 
-CREATE TABLE Eats(
-	name VARCHAR(255) NOT NULL,
-	pizza VARCHAR(255) NOT NULL,
-	PRIMARY KEY(name, pizza),
-	FOREIGN KEY (name) REFERENCES Person(name)
-);
+The above table is susceptible to update anomalies. Provide examples of insertion, deletion, and modification anomalies.
 
-CREATE TABLE Serves(
-	pizzeria VARCHAR(255) NOT NULL,
-	pizza VARCHAR(255) NOT NULL,
-	price NUMERIC(10,2) NOT NULL CHECK (price > 0),
-	PRIMARY KEY(pizzeria, pizza)
-);
-```
+#### Task 1.2
+Given the following functional dependencies
 
-Write the following queries, possibly using set operators, nested queries, views and the like. Whenever possible, argue whether you could have rewritten the queries in a different way (e.g., without nesting, without set operators).
+- StudID → StudName
+- StudID, CourseID → Grade
+- CourseID → CourseName
+- CourseID → FacName
+- FacName → FacPhone
 
-For each query, define a set of tests (inputs) that check it correctness. Typical examples include running the query against:
+Check if they holds in the above table.
 
-- an empty db
-- a db containing NULL values (when the constraints allow for them)
-- a db with (partially) matching tuples (e.g., for testing joins).
+#### Task 1.3
 
+Describe and illustrate the process of normalizing the table shown to 3NF. For each of the steps below list the relations and their Primary Keys
 
-Possible queries:
+1. 1NF
+2. 2NF
+3. 3NF 
 
-1. Find the pizzeria serving the cheapest pepperoni pizza. In the case of ties, return all of the cheapest-pepperoni pizzerias.
-2. Find the names of all people who frequent only pizzerias serving at least one pizza they eat.
-3. Find the names of all people who frequent every pizzeria serving at least one pizza they eat.
+### Task 2. Query Optimization
 
-
-
-### Task 1.2: Views
-
-Given the following SQL Schema:
+Given the following schema:
 
 ```
-CREATE TABLE Department(id INTEGER PRIMARY KEY, name TEXT);
-
-CREATE TABLE Employee(id INTEGER PRIMARY KEY, name TEXT, role TEXT, dep_id INTEGER, FOREIGN KEY (dep_id) REFERENCES Department(id)) ;
+Student(sid, name, age, address)
+Book(bid, title, author)
+Checkout(sid, bid, date)
 ```
 
-Filled with the data:
+And assuming:
+
+- There are 10,000 Student records stored on 1,000 pages.
+- There are 50,000 Book records stored on 5,000 pages.
+- There are 300,000 Checkout records stored on 15,000 pages. 
+- There are 500 different authors.
+- Student ages range from 7 to 24.
+
+#### Task 2.1:
+Show the canonical query execution tree for the following query.
+
+
+```    
+    SELECT S.name
+    FROM Student S, Book B, Checkout C
+    WHERE S.sid = C.sid
+    AND B.bid = C.bid
+    AND B.author = 'Olden Fames'
+    AND S.age > 12
+    AND S.age < 20
+```
+
+#### Task 2.2
+Suggest an alternative (optimized) query plan for the query of Task 2.1.
+
+#### Task 2.3
+
+Consider the following Relational Model:
 
 ```
-INSERT INTO Department(id, name) VALUES(1, 'Accounting');
-INSERT INTO Department(id, name) VALUES(2, 'IT');
-
-
-INSERT INTO Employee(name, role, dep_id) VALUES('John Doe', 'Manager', 2);
-INSERT INTO Employee(name, role, dep_id) VALUES('Jane Smith', 'Developer', 2);
-INSERT INTO Employee(name, role, dep_id) VALUES('David Gray', 'Developer', 2);
-INSERT INTO Employee(name, role, dep_id) VALUES('Mia Brown', 'Sales', 1);
-INSERT INTO Employee(name, role, dep_id) VALUES('Max Green', 'Developer', 2);
+R(a,b)
+S(b,c)
+T(b,d)
+U(b,e)
 ```
 
-1. Create a View on top of `Employee`, accessing only the attributes `id` and `name` of 'Developers'
+For the following SQL query, give two equivalent query execution plans such that one is likely to be more efficient than the other. 
 
-2. Try to insert and update values in that view. How does the table change?
+```
+    SELECT R.a
+    FROM R, S
+    WHERE R.b = S.b AND
+          S.c = 3
+```
 
-3. Create another View that shows the name of 'overcrowded' departments, i.e., departments that have more than 3 Employees.
+Indicate which one is likely to be more efficient. Explain.
 
-### Task 1.3 Dealing with References
-Update the Employee table and add an update and delete clause  on the foreign key. Make sure they are different.
+### Task 3. Hands on 
 
-1. Which update/delete clause did you choose?
-2. Discuss how the update delete clauses affect the Employee table after updating and deleting the related entries in Department.
-3. Execute the update and check that the table was modified as expected. Next, execute the delete and check that table was modified as expected
+For this exercise, we need to use an existing database. Among the many sample databases that you find around (e.g., [https://dev.mysql.com/doc/index-other.html](https://dev.mysql.com/doc/index-other.html)) we use the `employee data` a large dataset that includes data and test/verification suite.
 
-### Task 2: SQL Alchemy
-Implement the database in Python using SQL Alchemy, fill it with input data, and run some the queries from Task 1.
+The dataset is available also on GitHub:
+[https://github.com/datacharmer/test_db](https://github.com/datacharmer/test_db)
 
-Implement the queries as test cases (one test, one query) and run the tests against a local SQLIte and a 'dockerized' MariaDB using the test fixtures that you implemented during the Self-Learning activities 
+#### Setup the DB
+
+Before we can use it with MariaDB, we need to run a new container:
+
+```
+docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=mypass -p 3306:3306 -d mariadb:10.6
+```
+
+Now, we connect to the running container and start the `bash` interpreter:
+
+`docker exec -it mariadbtest /bin/bash`
+
+You should see a prompt like this:
+
+```
+root@25712fc19ceb:/# 
+```
+
+At this point, we can run commands just like regular (Linux/Unix) shell/terminal.
+
+First, we update the local package repository:
+
+```
+root@25712fc19ceb:/# apt-get update
+```
+
+Next, we install git:
+```
+root@25712fc19ceb:/# apt-get install git
+```
+
+Then, we clone the Employee DB repo from GitHub:
+
+```
+root@25712fc19ceb:/# git clone https://github.com/datacharmer/test_db.git
+```
+
+We load the database
+
+```
+root@25712fc19ceb:/# cd test_db
+root@25712fc19ceb:/test_db#: mariadb --user root -pmypass < employees.sql 
+```
+
+Next, we test it:
+
+```
+root@25712fc19ceb:/test_db# mariadb --user root -pmypass -t < test_employees_md5.sql
+
+```
+
+Finally, we exit from the (bash) container:
+```
+root@25712fc19ceb:/test_db# exit
+```
+
+At this point, we have a (large) database available inside the running docker container and we can connect to it for running queries:
+
+```
+docker exec -it mariadbtest mariadb --user root -pmypass
+```
+
+>> NOTE: This time we execute the command `mariadb` to start the interpret directly in the container. We could also execute `/bin/bash` and then invoke `mariadb`.
+
+#### Task 3.1
+
+- Using the `EXPLAIN` and `ANALYZE` commands, execute the following query and find out what execution plan is used to run it.
+
+```
+SELECT * FROM salaries WHERE salary > 150000;
+```
+    
+- What is the estimated total cost and what the actual total cost of the plan?
+
+- Build an index on the field `salary`. What kind of index was created?
+
+```
+CREATE INDEX idx_salary ON salaries(salary);
+```
+
+```
+SHOW INDEX FROM salaries;
+```
+
+- Re-run the query and report its execution plan again.
+
+- What is the estimated total cost and what the actual total cost of the plan now?
+
+- Drop the previously created index
+
+```
+ALTER TABLE salaries DROP INDEX idx_salary;
+```
+
+#### Task 3.2
+
+- Using the `EXPLAIN` and `ANALYZE` commands, execute the following query and find out the execution plans chosen to run them.
+
+```
+  SELECT * FROM employees ORDER BY emp_no;
+```
+  
+```
+  SELECT * FROM salaries ORDER BY salary DESC;
+```
+
+- What is the estimated total cost and what the actual total cost of the plans?
+
+- Which sorting algorithm was used for each of the queries? Why are they different?
+
+- Build an index for the second query on the field `salary `.
+
+- Re-run the second query and report its execution plan again.
+
+- What is the estimated total cost and what the actual total cost of the plan?
+
+- Check whether the sorting algorithm remained the same or changed after building the index. Explain briefly. 
+
+- Change the second query and report changes in the analysis.
+
+```
+SELECT * FROM salaries WHERE salary > 150000 ORDER BY salary;
+```
+
+```
+SELECT * FROM salaries ORDER BY salary LIMIT 10;
+```
+```
+SELECT * FROM salaries ORDER BY salary LIMIT 1000;
+```
+```
+SELECT * FROM salaries ORDER BY salary LIMIT 10000;
+```
+
+- Drop all the previously created indices
+
 
 ## Log of Past Sessions
 
@@ -171,3 +313,9 @@ Self-Learning - Part 2
 ### Session 8 - 24/04/2024
 
 We exercise some more with RA on the pizza database and we started working with SQL to create tables and define constraints (SQL as DDL). Additionally, we also started to insert data/values in the database (SQL as DML).
+
+### Session 9 - 08/05/2024
+
+We exercise more on complex SQL queries that requires the use of set operators, nested queries and subqueries. We used the Pizza db as test subject. We discussed conceptual approaches to generate test cases to validate our queries.
+We experimented creating and modifying views.
+We discussed the implications of different configurations of the referential constraint triggers (ON DELETE|ON UPDATE).
