@@ -110,7 +110,9 @@ docker run --name mariadbtest -e MYSQL_ROOT_PASSWORD=mypass -p 3306:3306 -d mari
 
 Now, we connect to the running container and start the `bash` interpreter:
 
-`docker exec -it mariadbtest /bin/bash`
+```
+docker exec -it mariadbtest /bin/bash
+```
 
 You should see a prompt like this:
 
@@ -127,6 +129,7 @@ root@25712fc19ceb:/# apt-get update
 ```
 
 Next, we install git:
+
 ```
 root@25712fc19ceb:/# apt-get install git
 ```
