@@ -36,7 +36,6 @@ Describe and illustrate the process of normalizing the table shown to 3NF. For e
 2. 2NF
 3. 3NF 
 
-
 ## Log of Past Sessions
 
 ### Session 1 - 06/03/2024
