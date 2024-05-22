@@ -1,6 +1,6 @@
 # Public repository for DBST2UE 2024
 
-## Session 11 - 2205/24
+## Session 11 - 22/05/24
 
 ### Task 1 Normalization
 
@@ -36,15 +36,84 @@ Describe and illustrate the process of normalizing the table shown to 3NF. For e
 2. 2NF
 3. 3NF 
 
+### Task 2. Transaction
+
+A schedule is defined as an ordering of operations that belong to different transactions. 
+
+A schedule is **serializable** if it is equivalent to a **serial** schedule, which executes all the operations comprising a query before executing the operations that belong to the next query.
+
+Check whether the following schedules are serializable. Explain your answer.
+
+> Note: `READ (A, t)` stands for reading the value of `A` from the DB into the value of variable `t`, whereas `WRITE (A, t)` stands for storing the value of variable `t` into the database as `A`.
+
+### Schedule 1
+| T1 | T2 |
+|----|----|
+|READ (A, t) | | 
+| t := t + 100 | |
+| WRITE (A, t) | |
+| | READ (A, s)| 
+| | s := s * 2 |
+| | WRITE (A, s) |
+| | READ (B, s) |
+| | s := s * 2 |
+| | WRITE (B, s) |
+| READ (B, t) | |
+| t := t + 100 | |
+| WRITE (B, t) | |
+
+### Schedule 2
+| T1 | T2 |
+|----|----|
+|READ (A, t) | | 
+| t := t + 100 | |
+| WRITE (A, t) | |
+| | READ (A, s)| 
+| | s := s * 2 |
+| | WRITE (A, s) |
+| READ (B, t) | |
+| t := t + 100 | |
+| WRITE (B, t) | |
+| | READ (B, s) |
+| | s := s * 2 |
+| | WRITE (B, s) |
+
+### Task 3: Deadlocks
+
+Given the following schedule:
+
+| Tr  | 1     | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    |
+|-----|-------|------|------|------|------|------|------|------|------|
+| 1   | S(A)  | S(D) |      | S(B) |      |      |      |      |      |
+| 2   |       |      | X(B) |      |      |      | X(C) |      |      |
+| 3   |       |      |      |      | S(D) | S(C) |      |      | X(A) |
+| 4   |       |      |      |      |      |      |      | X(B) |      | 
+
+#### Task 3.1 
+Check if the schedule leads to a deadlock when all the locks are exclusive 
+
+#### Task 3.2
+Check if the situation changes if we can distinguish between shared and exclusive locks.
+
+
+> Note: The following table shows the lock compatibility of Shared (S) and Exclusive (X) locks:
+
+
+|   | **S** | **X** |
+|---|---|---|
+| **S** | OK | – |
+| **X** | – | – |
+
+
 ## Log of Past Sessions
 
 ### Session 1 - 06/03/2024
 
-We started the setup of students environment to get ready for the assignment and the exercises in class.
+We started the setup of the students' environment to get ready for the assignment and the exercises in class.
 
-We configured PowerShell/Shell, created an ssh key (in the default location), registered the ssh key into GitHub. 
+We configured PowerShell/Shell, created an SSH key (in the default location), and registered the SSH key on GitHub. 
 
-We checked the installation of `git` and `python`. For the moment we do not enforce any specific version of python.
+We checked the installation of `git` and `python`. We do not enforce any specific version of Python at the moment.
 
 We accepted the Classroom assignment for DBST2UE and added this repository as git submodule under the name `public`. We committed the changes and pushed back, checked on GitHub that the public folder is actually a link to another repository (e.g., this repository at the time we add the submodule).
 
