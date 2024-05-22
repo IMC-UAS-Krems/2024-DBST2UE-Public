@@ -26,7 +26,7 @@ Given the following functional dependencies
 - CourseID → FacName
 - FacName → FacPhone
 
-Check if they holds in the above table.
+Check if they hold in the above table.
 
 #### Task 1.3
 
@@ -38,7 +38,7 @@ Describe and illustrate the process of normalizing the table shown to 3NF. For e
 
 ### Task 2. Transaction
 
-A schedule is defined as an ordering of operations that belong to different transactions. 
+A schedule is an ordering of operations belonging to different transactions. 
 
 A schedule is **serializable** if it is equivalent to a **serial** schedule, which executes all the operations comprising a query before executing the operations that belong to the next query.
 
@@ -78,7 +78,9 @@ Check whether the following schedules are serializable. Explain your answer.
 | | s := s * 2 |
 | | WRITE (B, s) |
 
-### Task 3: Deadlocks
+
+## Session 12 - 29/05/24
+### Task 1: Deadlocks
 
 Given the following schedule:
 
@@ -89,10 +91,10 @@ Given the following schedule:
 | 3   |       |      |      |      | S(D) | S(C) |      |      | X(A) |
 | 4   |       |      |      |      |      |      |      | X(B) |      | 
 
-#### Task 3.1 
+#### Task 1.1 
 Check if the schedule leads to a deadlock when all the locks are exclusive 
 
-#### Task 3.2
+#### Task 1.2
 Check if the situation changes if we can distinguish between shared and exclusive locks.
 
 
