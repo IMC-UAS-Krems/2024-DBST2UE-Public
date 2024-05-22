@@ -79,7 +79,8 @@ Check whether the following schedules are serializable. Explain your answer.
 | | WRITE (B, s) |
 
 
-## Session 12 - 29/05/24
+## Session 12 - 05/06/24
+
 ### Task 1: Deadlocks
 
 Given the following schedule:
