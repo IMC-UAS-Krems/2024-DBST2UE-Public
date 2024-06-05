@@ -1,87 +1,38 @@
 # Public repository for DBST2UE 2024
 
-## Session 11 - 22/05/24
-
-### Task 1 Normalization
-
-Given the following table:
-
-|StudID |CourseID |StudName |CourseName |Grade| FacName |FacPhone|
-|-----|-----|-----|-----|-----|-----|-----|
-1 | PROG2, DBSE2UE | Adams | Prog2, Database | 1, 2 | Dhungana, Gambi | 1234, 1122
-2 | PROG2 | Jones | Prog2 | 3  | Dhungana | 1234
-3 | PROG2 | Smith | Prog2 | 1  | Dhungana | 1234
-4 | PROG2, DBSE2UE| Baker | Prog2, Database | 3, 1 | Dhungana, Gambi| 1234, 1122
-
-#### Task 1.1
-
-The above table is susceptible to update anomalies. Provide examples of insertion, deletion, and modification anomalies.
-
-#### Task 1.2
-Given the following functional dependencies
-
-- StudID → StudName
-- StudID, CourseID → Grade
-- CourseID → CourseName
-- CourseID → FacName
-- FacName → FacPhone
-
-Check if they hold in the above table.
-
-#### Task 1.3
-
-Describe and illustrate the process of normalizing the table shown to 3NF. For each of the steps below list the relations and their Primary Keys
-
-1. 1NF
-2. 2NF
-3. 3NF 
-
-### Task 2. Transaction
-
-A schedule is an ordering of operations belonging to different transactions. 
-
-A schedule is **serializable** if it is equivalent to a **serial** schedule, which executes all the operations comprising a query before executing the operations that belong to the next query.
-
-Check whether the following schedules are serializable. Explain your answer.
-
-> Note: `READ (A, t)` stands for reading the value of `A` from the DB into the value of variable `t`, whereas `WRITE (A, t)` stands for storing the value of variable `t` into the database as `A`.
-
-### Schedule 1
-| T1 | T2 |
-|----|----|
-|READ (A, t) | | 
-| t := t + 100 | |
-| WRITE (A, t) | |
-| | READ (A, s)| 
-| | s := s * 2 |
-| | WRITE (A, s) |
-| | READ (B, s) |
-| | s := s * 2 |
-| | WRITE (B, s) |
-| READ (B, t) | |
-| t := t + 100 | |
-| WRITE (B, t) | |
-
-### Schedule 2
-| T1 | T2 |
-|----|----|
-|READ (A, t) | | 
-| t := t + 100 | |
-| WRITE (A, t) | |
-| | READ (A, s)| 
-| | s := s * 2 |
-| | WRITE (A, s) |
-| READ (B, t) | |
-| t := t + 100 | |
-| WRITE (B, t) | |
-| | READ (B, s) |
-| | s := s * 2 |
-| | WRITE (B, s) |
-
-
 ## Session 12 - 05/06/24
 
-### Task 1: Deadlocks
+### Deadlock
+
+Consider the following two transactions: 
+
+T1: 
+
+```
+begin
+write C 
+read B 
+write C 
+commit
+```
+
+T2: 
+
+```
+begin
+write B 
+read C 
+read C 
+commit
+```
+
+#### Task 1 
+In a DBMS using the two-phase locking algorithm, whether transactions will cause deadlocks depends on how they are executed. If the above two transactions are executed concurrently, under what situations can a deadlock occur?
+
+### Task 2
+In a DBMS that has not implemented any concurrency control algorithms, can **non-repeatable reads** occur if the above two transactions are executed concurrently? 
+
+### Task 3
 
 Given the following schedule:
 
@@ -92,12 +43,11 @@ Given the following schedule:
 | 3   |       |      |      |      | S(D) | S(C) |      |      | X(A) |
 | 4   |       |      |      |      |      |      |      | X(B) |      | 
 
-#### Task 1.1 
+#### Task 3.1 
 Check if the schedule leads to a deadlock when all the locks are exclusive 
 
-#### Task 1.2
+#### Task 3.2
 Check if the situation changes if we can distinguish between shared and exclusive locks.
-
 
 > Note: The following table shows the lock compatibility of Shared (S) and Exclusive (X) locks:
 
@@ -106,6 +56,128 @@ Check if the situation changes if we can distinguish between shared and exclusiv
 |---|---|---|
 | **S** | OK | – |
 | **X** | – | – |
+
+
+## NoSQL - Document Database - Mongo DB
+
+### Task 1: Setup
+
+Start a new mongo db (server):
+
+```
+docker run --name mongodb -d mongo
+```
+
+Connect to the running server:
+
+```
+docker exec -it mongodb mongosh
+```
+
+### Task 2
+Try the basic commands:
+
+- `show dbs` Lists all available databases
+- `use <db>` Switch current database to <db>
+- `show collections` Print a list of all collections for current database
+- `exit` Exits the started mongo and thus also the connection to the container
+
+> Note: You can read more here: [https://www.mongodb.com/docs/manual/tutorial/getting-started/](https://www.mongodb.com/docs/manual/tutorial/getting-started/)
+
+
+### Task 3
+
+Create a new database called `ex11` by connecting to it.
+
+Create a collection called  `movies` with the following entries.
+> Hint: use `db.movies.insert( ...`
+
+1. Title: "Fight Club", Writer: "Chuck Palahniuk", year: "1999", actors: ["Brad Pitt", "Edward Norton"]
+2. Title: "Pulp Fiction", Writer: "Quentin Tarantino", year: "1994", actors: ["John Travolta", "Uma Thurman"]
+3. Title:"IngloriousBasterds",Writer:"QuentinTarantino",year:"2009",actors:["Brad Pitt", "Diane Kruger", "Eli Roth"]
+4. Title: "The Hobbit: An Unexpected Journey", Writer: "J.R.R. Tolkein", year: "2012", franchise: "The Hobbit"
+5. Title: "The Hobbit: The Desolation of Smaug", Writer: "J.R.R. Tolkein", year: "2013", franchise: "The Hobbit"
+6. Title: "The Hobbit: The Battle of the Five Armies", Writer: "J.R.R. Tolkein", year: "2012", franchise: "The Hobbit", synopsis: "Bilbo and Company are forced to engage in a war against an array of combatants and keep the Lonely Mountain from falling into the hands of a rising darkness."
+7. Title:"Pee Wee Herman's Big Adventure"
+8. Title:"Avatar"
+
+> Note: At home you can try to automatize this process using Python
+
+### Task 4
+
+Update the documents inside `movies` collection:
+
+1. Add the synopsis "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug." to the move with the title "The Hobbit: An Unexpected Journey"
+
+2. Add the synopsis "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring." to the movie with the title "The Hobbit: The Desolation of Smaug"
+
+3. Add "Samuel L. Jackson" as an actor to the movie "Pulp Fiction"
+
+### Task 5
+
+Query the database with the following text search
+[https://docs.mongodb.com/manual/text-search/](https://docs.mongodb.com/manual/text-search/):
+
+1. List all movies with the word "Gandalf" in their synopsis
+2. List all movies with the words "dwarves" or "hobbit" in their synopsis
+3. List all movies with the word "Bilbo" but not the word "Gandalf" in their synopsis
+
+### Task 6 
+
+Delete the movies "Avatar" and "Pee Wee Herman's Big Adventure" from your database.
+
+Verify that those movies indeed disappeared.
+
+
+# Session 13 - 12/06/24
+
+## NoSQL - Graph Database - Neo4j
+
+### Task 1 Setup
+
+Start a new graph database server:
+
+```docker run --name neo --publish=7474:7474 --publish=7687:7687 --env=NEO4J_AUTH=none -d neo4j```
+ 
+Check that everything is running ok by visiting:
+
+`http://localhost:7474`
+
+Use the GUI to connect to the server and then:
+
+### Task 2
+
+- Lists all available databases (`:dbs`)
+- Connect to the `neo4j` database with (`:use <db>`)
+- Show an overview of the database (`CALL db.schema.visualization()`) 
+
+More infos at:
+[https://neo4j.com/docs/cypher-manual/4.0/](https://neo4j.com/docs/cypher-manual/4.0/)
+and
+
+[https://neo4j.com/developer/get-started/](https://neo4j.com/developer/get-started/)
+
+### Task 3
+
+Connect to the running Neo4J with the brower.
+
+Start by following the introduction steps of neo4j, by working through their "Movie Graph" tutorial (`:play movie graph`). 
+
+You can also look here for a step by step guide:
+[https://neo4j.com/developer/cypher/guide-cypher-basics/](https://neo4j.com/developer/cypher/guide-cypher-basics/)
+
+Make sure to execute (and verify) the CREATE-Step before trying anything else of this exercise. 
+
+> Note: DO NOT RUN the Clean-up step before completing the exercise, otherwise you won't have data to work with .
+
+1. Show all nodes and their relationships in your database
+2. Output the amount of created nodes
+3. Output the amount of created relationships
+4. Find all titles of movies in the database
+5. Return all people, who acted in the Movie with the title "Sleepless in Seattle"
+6. Return all actors, who acted besides "Keanu Reeves"
+7. Print out the node and the amount of its relationships of the node with the largest amount of relationships
+8. Insert a new movie, which is not already in the database, including its actors, director(s) and a producer
 
 
 ## Log of Past Sessions
@@ -201,3 +273,9 @@ We had an hands on experience on:
 - connecting to a mariadb database running inside docker
 - installing/creating a mariadb from a database dump stored in a `.sql` file
 - Creating index on non-key attributes, observing the performance speedup, and using EXPLAIN/ANALYZE to gather more info on the query
+
+### Session 11 - 22/05/24
+
+We exercised on functional dependencies and normalization by transforming a poorly designed relation into a set of interconnected ones, such that each relation is in 3NF.
+
+We also did exercises on scheduling of transactions proving/disproving serializable schedules.
