@@ -57,6 +57,7 @@ Check if the situation changes if we can distinguish between shared and exclusiv
 | **S** | OK | – |
 | **X** | – | – |
 
+# Session 13 - 12/06/24
 
 ## NoSQL - Document Database - Mongo DB
 
@@ -128,8 +129,6 @@ Delete the movies "Avatar" and "Pee Wee Herman's Big Adventure" from your databa
 
 Verify that those movies indeed disappeared.
 
-
-# Session 13 - 12/06/24
 
 ## NoSQL - Graph Database - Neo4j
 
