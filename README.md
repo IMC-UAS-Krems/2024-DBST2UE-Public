@@ -29,10 +29,10 @@ commit
 #### Task 1 
 In a DBMS using the two-phase locking algorithm, whether transactions will cause deadlocks depends on how they are executed. If the above two transactions are executed concurrently, under what situations can a deadlock occur?
 
-### Task 2
+#### Task 2
 In a DBMS that has not implemented any concurrency control algorithms, can **non-repeatable reads** occur if the above two transactions are executed concurrently? 
 
-### Task 3
+#### Task 3
 
 Given the following schedule:
 
