@@ -1,5 +1,181 @@
 # Public repository for DBST2UE 2024
 
+## Session 14: 12/06/2023
+
+This session contains a set of sample exam questions/exercises. We will *not* solve all of them during the session.
+
+### Task 1: Entity and Relationship 
+
+Design an ER diagram for a car insurance company whose customers can own one or more cars. Each car has associated with it zero to any number of recorded accidents.
+
+### Task 2: Relational Model and Relational Algebra
+
+Given the following RM describing a Library:
+
+```
+User (<ins>ID</ins>, Name, Surname, Address, Email)</br>
+Loan (<ins>Placement</ins>, <ins>UserID</ins>, <ins>LoanDate</ins>, ReturnDate)</br>
+BookCopy (<ins>Placement</ins>, ISBN, PurchaseDate)</br>
+Book (<ins>ISBN</ins>, Title, YearPub, Editor, FirstAuthor, Genre)
+```
+
+Write the following queries in RA:
+
+1. Find the title of all the books published in the '00
+2. Find the title of all the books that have not been published in the '00
+3. Find the title of "Informatics" books loaned in June 2020
+4. Find the name, surname, and ID of users who never took an Informatics book
+5. Find the title of all the books loaned or bought in June 2020
+6. Find the title of all the books that have never been loaned
+7. For each user, return the title of the last book loaned
+8. Find the ID of users that have loaned books of all genres
+
+### Task 3: Functional Dependencies and Normalization
+
+| StaffNo  | DentistName | PatientNo | PatientName | Appointment data and time | SurgeryNo |
+|--------|--------|--------|--------|--------|--------|
+| S1011  | Tony Smith | P100 | Gillian White | 12-Aug 10:00| S10 |
+| S1011  | Tony Smith | P105| Jill Bell | 13-Aug 12:00 | S15 |
+| S1024  | Helen Pearson | P108| Ian MacKay| 12-Sept 10:00 | S10 |
+| S1024  | Helen Pearson | P108| Ian MacKay| 14-Sept 10:00|S10  |
+| S1032  | Robin Plevin | P105 | Jill Bell | 14-Oct 16:00 |S15 |
+| S1032  | Robin Plevin | P110 | John Walker | 15-Oct 18:00| S13|
+
+#### Task 3.1
+The above table is susceptible to update anomalies. Provide examples of insertion, deletion, and modification anomalies.
+
+#### Task 3.2
+
+Describe and illustrate the process of normalizing the Relation reported above to 3NF. State any assumptions you make about the data shown in this table.
+
+### Task 4: SQL
+
+Considering the exercise above, complete the following tasks:
+
+#### Task 4.1
+
+Write the necessary SQL commands to create the database schema.
+
+#### Task 4.2
+
+Write the following queries in SQL. Use nested queries and `views` when you see fit.
+
+1. Find the title of all the books published in the '90 (90-99)
+3. Show all the details of the book "Applied Informatics"
+4. Find the title of Informatics books loaned in June 2020, sorted by title
+6. Find the name, surname, and ID of users who never took an Informatics book
+7. For each genre, find the number of times books of that genre have been loaned
+8. Find the name, surname, and ID of overdue users
+9. For each genre, find the number of times books of that genre have been loaned.
+10. List the genres of books that have been loaned at least 20 times.
+11. Find the title of all the books that have never been loaned
+12. Find the genre of books with the biggest amount of loans (cumulative)
+13. For each user, return the last book loaned
+
+### Task 5. Query Optimization
+
+#### Task 5.1
+Concerning the SQL exercise above, write the canonical form of the following queries and provide an optimized version. If this is not possible or convenient, explain why. 
+
+1. Find the title of all the books published in the '00
+2. Find the title of all the books loaned or bought in June 2020
+3. For each genre, find the number of times books of that genre have been loaned.
+4. Find the name, surname, and ID of overdue users
+
+#### Task 5.2
+
+Consider the query plan depicted in the image below and optimize it. Explain each step.
+
+![image](./session.14/query.jpg)
+
+
+### Task 6. Transactions and Deadlocks
+
+#### Task 6.1 Isolation levels
+
+Given the following two transactions (`T1` and `T2`) that are executed concurrently; what is the result of transaction `T2` when the isolation level is set to (refer to the Isolation Levels vs Violations chart provided below).
+
+- `READ UNCOMMITTED`: `Eddy` | `Frank` | `NULL` | `None of the above`
+- `READ COMMITTED`: `Eddy` | `Frank` | `NULL` | `None of the above`
+- `REPEATABLE READ`: `Eddy` | `Frank` | `NULL` | `None of the above`
+- `SERIALIZABLE`: `Eddy` | `Frank` | `NULL` | `None of the above`
+
+> Note: Assume that the FirstName of the Employee with EmpID equals 1 is `Eddy` at the beginning.  
+
+```
+-- Transaction T1
+BEGIN TRANSACTION; 
+ 
+UPDATE EmployeeInfo
+SET FirstName = 'Frank'
+WHERE EmpID = 1;
+ 
+-- Note: this blocks T1 for 5 seconds
+WAITFOR DELAY '00:00:05'  
+ 
+ROLLBACK TRANSACTION;
+```
+
+```
+-- Transaction T2
+BEGIN TRANSACTION; 
+
+-- Note: this blocks T1 for 2 seconds
+WAITFOR DELAY '00:00:02'  
+
+SELECT FirstName FROM EmployeeInfo
+WHERE EmpID = 1;
+
+COMMIT;
+```
+
+![image](./session.14/isolation-levels.pdf)
+
+
+#### Task 6.2 Deadlocks
+
+Check if a deadlock is possible given the following state of requests:
+
+
+```
+Process A holds R and wants S
+Process B holds nothing but wants T
+Process C holds nothing but wants S
+Process D holds U and wants S and T
+Process E holds T and wants V
+Process F holds W and wants S
+Process G holds V and wants U
+```
+
+## Task 7. SemiStructured Data
+
+### Task 7.1
+
+Given the following DTD create an XML file that contains information about three articles written by two authors.
+
+```
+<!DOCTYPE NEWSPAPER [
+
+<!ELEMENT NEWSPAPER (ARTICLE+)>
+<!ELEMENT ARTICLE (HEADLINE,BYLINE,BODY)>
+<!ELEMENT HEADLINE (#PCDATA)>
+<!ELEMENT BYLINE (#PCDATA)>
+<!ELEMENT BODY (#PCDATA)>
+
+<!ATTLIST ARTICLE AUTHOR CDATA #REQUIRED>
+<!ATTLIST ARTICLE DATE CDATA #IMPLIED>
+]>
+```
+
+#### Task 7.2
+
+Write the following XPaths/XQuery:
+
+- (XPath) Return the names of the authors
+- (XPath) Return the title of the last two published articles
+- (XQuery) Produce an HTML nested unordered list `<ul>` that contains a bullet (`<li>`) for each author and contains another unordered list (`<ul>`) that contains the title and date of their articles. Both nested lists must be sorted by name of the authors and publication date of the news
+
+
 ## Session 13 - 12/06/24
 
 ### NoSQL - Document Database - Neo4J
